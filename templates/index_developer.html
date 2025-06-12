@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: flex-start; /* Align the containers horizontally */
+        align-items: flex-start;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+    }
+
+    #chatbox-container {
+        display: flex;
+        flex-direction: row; /* Place elements horizontally */
+        width: 100%;
+        height: 100%;
+    }
+
+    .left-container {
+        width: 25%; /* Adjust width for the left container */
+        padding: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Optional styling */
+        background-color: #f9f9f9; /* Optional styling */
+        border-right: 1px solid #ddd; /* Optional styling */
+        height: 100%; /* Ensure full page height */
+    }
+
+    #chatbox {
+        width: 75%; /* Remaining space for the chatbox */
+        padding: 20px;
+        height: 100%; /* Full page height */
+    }
+
+    #messages {
+        height: 60%; /* Leave some space for inputSection */
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background-color: #ffffff;
+        border-radius: 5px;
+    }
+
+    .message {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+    }
+
+    .user {
+        background-color: #c7fcb7; /* Blue for user messages */
+        color: black;
+        text-align: right; /* Align user's messages to the right */
+    }
+
+    .bot {
+        background-color: #c3e1f9; /* Light gray for assistant messages */
+        color: black;
+        text-align: left; /* Align assistant's messages to the left */
+    }
+
+    #inputSection {
+        margin-top: 10px;
+    }
+
+    #userInput {
+        width: calc(100% - 85px);
+        height: 60px;
+        padding: 8px;
+        margin-right: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: Arial;
+    }
+
+    #sendButton {
+        padding: 8px 15px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #sendButton:hover {
+        background-color: #0056b3;
+    }
+
+    .slider-container, .button-box {
+        margin-bottom: 20px;
+    }
+
+    input[type="range"] {
+        width: 100%;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    span {
+        margin-left: 10px;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .sys_setter {
+        width: 100%;
+        margin-top: 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #buttonSection {
+        display: flex;
+        flex-direction: column; /* Keep the buttons stacked vertically */
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+        height: 100vh; /* Make it span full viewport height */
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Optional styling */
+        background-color: #f9f9f9; /* Optional styling */
+    }
+
+    .button-box {
+        margin-bottom: 20px; /* Add space between sections */
+        width: 80%; /* Adjust width for a consistent look */
+    }
+
+    input[type="text"], 
+    select, 
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+    }
+
+    button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    h3 {
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    #upload_button {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #upload_button:hover {
+        background-color: #0056b3; /* Changes button color on hover */
+    }
+
+
+</style>
+
+</head>
+
+
+<script>
+    function toggleFileNameInput() {
+        const fileNameSection = document.getElementById("fileNameSection");
+        if (fileNameSection.style.display === "none") {
+            fileNameSection.style.display = "block";
+        } else {
+            fileNameSection.style.display = "none";
+        }
+    }
+
+    function scrollToBottom() {
+        const chatMessages = document.getElementById("messages");
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function updateTemperature(value) {
+        // Update hidden sliders
+        const inputElements = document.querySelectorAll(".sliderInputValue");
+        inputElements.forEach((el) => {
+            if (el.tagName === "INPUT") {
+                el.value = value; // Update the value of input elements
+            } else {
+                el.textContent = value; // Update the content of span elements
+            }
+        });
+        // Update the display span
+        document.getElementById("displaySliderValue").textContent = value;
+
+        // Send the updated value to the server
+        fetch('/update_temperature', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ temperature: value }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data));
+    }
+
+    function setSystem() {
+        // Get values from the inputs
+        const defaultDb = document.getElementById("default_db").value;
+        const sliderValue = document.getElementById("sliderValue").value;
+        const systemBehavior = document.getElementById("sys_input").value;
+
+        // Create the payload to send to the server
+        const data = {
+            default_db: defaultDb,
+            temperature: sliderValue,
+            system_role: systemBehavior,
+        };
+
+        // Send the data to the server using Fetch API
+        fetch('/set_system', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data), // Convert JavaScript object to JSON
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Handle the server's response
+            alert("System behavior updated successfully!");
+        })
+        .catch(error => {
+            console.error('Error:', error); // Handle errors
+            alert("An error occurred while updating the system behavior.");
+        });
+    }
+    function handleKeypress(e) {
+        console.log("see keypress"); // Debugging log
+
+        if (e.key === "Enter" && !e.shiftKey) {
+            console.log("see"); // Debugging log for Enter key detection
+
+            e.preventDefault(); // Prevent default new line behavior
+
+            // Find the closest form and submit it
+            const form = e.currentTarget.closest("form");
+            if (form) {
+                form.submit();
+            } else {
+                console.error("No form found for textarea"); // Log error if no form is found
+            }
+        }
+    }
+
+    document.getElementById("userForm").addEventListener("submit", function(event) {
+        // Show the loading icon
+        document.getElementById("loadingIcon").style.display = "inline";
+
+        // Optionally disable the submit button to prevent multiple submissions
+        const submitButton = this.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+
+    });
+
+    // Call the function after the page loads
+    window.onload = function() {
+        // Scroll to bottom
+        scrollToBottom();
+    };
+
+</script>
+
+<body>
+    <!-- <div id="space"></div> -->
+    <div id="chatbox-container">
+        <div class="left-container">
+            <br>
+            <br>
+            <!-- Slider Section -->
+            <div class="slider-container">
+                <label for="slider">Set Temperature:</label>
+                
+                <!-- Slider Input -->
+                <input 
+                    type="range" 
+                    id="slider" 
+                    name="slider" 
+                    min="0" 
+                    max="1" 
+                    step="0.1" 
+                    value="{{temperature}}" 
+                    onchange="updateTemperature(this.value)">
+                
+                <!-- Display Slider Value -->
+                <span id="displaySliderValue">{{temperature}}</span>
+            </div>
+        
+            <!-- Button Section -->
+            <div class="button-box">
+                <input type="hidden" name="default_db" id="default_db" value="{{ default_db }}">
+                <input type="hidden" name="slider_value" class="sliderInputValue" id="sliderValue" value="{{ temperature }}">
+                <div id="fileNameSection">
+                    <input type="text" name="file_name" id="sys_input" placeholder="Set System Behaviour" required class="sys_setter">
+                </div>
+                <button type="button" onclick="setSystem()">Change</button>
+            </div>
+        </div>
+        <div id="chatbox">
+            <div id="messages">
+                <!-- Chat messages will appear here -->
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="message {% if msg.role == 'user' %}user{% else %}bot{% endif %}">
+                            {{ msg.content|safe}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div id="inputSection">
+                <form id="userForm" method="POST" action="/">
+                    <select name="vectordb" id="vectordbDropdown">
+                        {% for db in vector_dbs %}
+                        <option value="{{ db }}" {% if db == default_db %}selected{% endif %}>
+                            {{ db }}
+                        </option>                
+                        {% endfor %}
+                    </select>
+                    <!-- <input type="text" name="userInput" placeholder="Type your message here..." id="userInput" autocomplete="off"> -->
+                    <textarea id="userInput" name="userInput" onkeypress="handleKeypress(event)" placeholder="Type your message here..."></textarea>
+                    <button type="submit" id="sendButton">Send</button>
+                    <div id="loadingIcon" style="display: none;">
+                        <img src="loading-spinner.gif" alt="Loading..." style="width: 20px; height: 20px;"> 
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        
+        <div id="buttonSection">
+            <br>
+            <br>
+            <div class="button-box">
+                <form method="POST" action="/save">
+                    <input type="hidden" name="default_db" value="{{ default_db }}">
+                    <input type="hidden" name="slider_value" class="sliderInputValue" value={{temperature}}>
+                    <div id="fileNameSection">
+                        <input type="text" name="file_name" id="fileNameInput" placeholder="Name Chat history" required>
+                    </div>
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            <br>
+            <div class="button-box">
+                <form method="POST" action="/load">
+                    <h3>Past Chat History</h3>
+                    <input type="hidden" name="default_db" value="{{ default_db }}">
+                    <input type="hidden" name="slider_value" class="sliderInputValue" value={{temperature}}>
+                    <select name="chat_name" id="chatHistoryDropdown">
+                        {% for dropdown in chat_history_dropdown %}
+                            <option value="{{ dropdown }}">{{ dropdown }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Load</button>
+                </form>
+            </div>
+            <br>
+            <br>
+            <div class="button-box">
+                <form method="POST" action="/upload" enctype="multipart/form-data">
+                    <input type="hidden" name="default_db" value="{{ default_db }}">
+                    <input type="hidden" name="slider_value" class="sliderInputValue" value={{temperature}}>
+                    <input type="text" name="fileCollection" id="button_section3" placeholder="Document Collection Name" required>
+                    <input type="file" name="fileInput" id="button_section3" multiple accept=".csv,.pdf">
+                    <h5></h5>
+                    <button type="submit" id="upload_button">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
+
+<script src="script.js"></script>

@@ -1,0 +1,3 @@
+{'role': 'system', 'content': 'you are a general ai chatbot. When you go to a new paragraph add in a \\n\\n'}
+{'role': 'user', 'content': 'hello there'}
+{'role': 'assistant', 'content': 'Hello! How can I assist you today?'}

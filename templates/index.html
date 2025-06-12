@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+</head>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+<body>
+    <!-- <div id="space"></div> -->
+    <div id="chatbox-container">
+        <div class="left-container">
+            <img src="{{ url_for('static', filename='images/company_logo.png') }}" alt="company_logo" class="company_logo">
+            <form method="POST" action="/load" id="loadChatForm">
+                <h3 style="margin-top: 20px;">Past Chat History</h3>
+                <input type="hidden" name="default_db" value="{{ default_db }}">
+                <input type="hidden" name="slider_value" class="sliderInputValue" value="{{ temperature }}">
+                <!-- This hidden input will be set when a chat item is clicked -->
+                <input type="hidden" name="chat_name" id="chatNameInput" value="">
+            </form>
+            <div id="chatHistoryList">
+                {% for chat in chat_history_dropdown %}
+                <div class="chat-item {% if chat == request.cookies.get('chat') %}selected{% endif %}" data-chat="{{ chat }}">
+                    {{ chat }}
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Hidden form for loading chat history -->
+        </div>
+        <div id="chatbox">
+            <div id="messages">
+                <!-- Chat messages will appear here -->
+                {% if messages %}
+                {% for msg in messages %}
+                <div class="message {% if msg.role == 'user' %}user{% else %}bot{% endif %}">
+                    {{ msg.content|safe}}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div id="inputSection">
+                <!-- Left container: contains the form with select and textarea -->
+                <div class="left-container">
+                    <form id="userForm" method="POST" action="/">
+                        <div id="prompt-container">
+                            <textarea id="userInput" name="userInput" onkeypress="handleKeypress(event)"
+                                placeholder="Type your message here..."></textarea>
+                        </div>
+                        <select name="vectordb" id="vectordbDropdown">
+                            {% for db in vector_dbs %}
+                            <option value="{{ db }}" {% if db==default_db %}selected{% endif %}>
+                                {{ db }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+                <!-- Right container: contains the stacked buttons -->
+                <div class="right-container">
+                    <!-- Send Button: uses HTML5's form attribute to submit userForm -->
+                    <button form="userForm" type="submit" id="sendButton">
+                        <img src="{{ url_for('static', filename='images/send_icon.png') }}" alt="Send Icon"
+                            class="send-icon">
+                    </button>
+
+                    <!-- Upload Form: its label acts as a button to trigger file selection -->
+                    <form method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
+                        <input type="hidden" name="default_db" value="{{ default_db }}">
+                        <input type="hidden" name="slider_value" class="sliderInputValue" value="{{ temperature }}">
+                        <input type="file" name="fileInput" id="fileInput" multiple accept=".csv,.pdf"
+                            style="display: none;">
+                        <label for="fileInput" id="uploadButton" class="upload-button">
+                            <img src="{{ url_for('static', filename='images/upload_icon.png') }}" alt="Upload Icon"
+                                class="upload-icon">
+                        </label>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="buttonSection">
+            <img src="{{ url_for('static', filename='images/project_logo.png') }}" alt="project_logo" class="project_logo">
+            <br>
+            <br>
+            <div class="save-box">
+                <form method="POST" action="/save">
+                    <input type="hidden" name="default_db" value="{{ default_db }}">
+                    <input type="hidden" name="slider_value" class="sliderInputValue" value="{{ temperature }}">
+
+                    <!-- Container for the text input and the save button -->
+                    <div class="file-save-container">
+                        <input type="text" name="file_name" id="fileNameInput" placeholder="Name Chat history" required>
+                        <button type="submit" id="saveButton">Save</button>
+                    </div>
+                </form>
+            </div>
+            <br>
+        </div>
+    </div>
+
+
+</body>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</html>

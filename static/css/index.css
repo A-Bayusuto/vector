@@ -1,0 +1,387 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start; /* Align the containers horizontally */
+    align-items: flex-start;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.company_logo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 5px;
+    /* border-radius: 5px;            
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);   */
+}
+
+.project_logo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: -115px;
+    margin-bottom: 75px;
+}
+
+
+#chatbox-container {
+    display: flex;
+    flex-direction: row; /* Place elements horizontally */
+    width: 100%;
+    height: 100%;
+}
+
+.left-container {
+    width: 25%; /* Adjust width for the left container */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #f9f9f9; /* Optional styling */
+    border-right: 1px solid #ddd; /* Optional styling */
+    height: 100%; /* Ensure full page height */
+}
+
+#chatbox {
+    width: 75%; /* Remaining space for the chatbox */
+    padding: 20px;
+    height: 100%; /* Full page height */
+}
+
+#messages {
+    height: 60%; /* Leave some space for inputSection */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+}
+
+.user {
+    background-color: #c7fcb7; /* Blue for user messages */
+    color: black;
+    text-align: right; /* Align user's messages to the right */
+}
+
+.bot {
+    background-color: #c3e1f9; /* Light gray for assistant messages */
+    color: black;
+    text-align: left; /* Align assistant's messages to the left */
+}
+
+#inputSection {
+    margin-top: 10px;
+}
+
+#userInput {
+    width: calc(100% - 85px);
+    height: 60px;
+    padding: 8px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: Arial;
+}
+
+/* Styling for the send button (similar to upload button styling) */
+#sendButton {
+    display: inline-block;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #1e90ff, #00bfff);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  #sendButton:hover {
+    background: linear-gradient(135deg, #00bfff, #1e90ff);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* The send icon styling */
+  .send-icon {
+    width: 24px; /* Adjust as needed */
+    height: auto;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+  }
+  
+  /* Rotate the icon on hover */
+  #sendButton:hover .send-icon {
+    transform: rotate(7deg);
+  }
+  
+
+.slider-container, .button-box {
+    margin-bottom: 20px;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+span {
+    margin-left: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.sys_setter {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#buttonSection {
+    display: flex;
+    flex-direction: column; /* Keep the buttons stacked vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    height: 100vh; /* Make it span full viewport height */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #f9f9f9; /* Optional styling */
+    margin-right: 1%;
+}
+
+.button-box {
+    margin-bottom: 20px; /* Add space between sections */
+    width: 80%; /* Adjust width for a consistent look */
+}
+
+input[type="text"], 
+select, 
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+h3 {
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#upload_button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#upload_button:hover {
+    background-color: #0056b3; /* Changes button color on hover */
+}
+
+/*==================================================================*/
+
+.upload-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #1e90ff, #00bfff);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.upload-button:hover {
+    background: linear-gradient(135deg, #00bfff, #1e90ff);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.upload-icon {
+    width: 32px; /* Adjust the size as desired */
+    height: auto;
+    vertical-align: middle; /* To align with text if needed */
+}
+
+.upload-button img {
+    transition: transform 0.3s ease;
+}
+
+.upload-button:hover img {
+    transform: rotate(7deg);
+}
+
+/*===========================================*/
+
+#userInput {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Main container: arrange left and right sections side by side */
+#inputSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Left container takes available space */
+.left-container {
+    flex: 1;
+}
+
+/* Basic textarea styling */
+.input-container textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+/* Right container: stack the two buttons vertically */
+.right-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px;
+    align-items: center;
+    margin-top: 12px;
+}
+
+/* Common button styling (send and upload) with fancy hover effects */
+#sendButton,
+.upload-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #1e90ff, #00bfff);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#sendButton:hover,
+.upload-button:hover {
+    background: linear-gradient(135deg, #00bfff, #1e90ff);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Icon styling and transition */
+.send-icon,
+.upload-icon {
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+#sendButton:hover .send-icon,
+.upload-button:hover .upload-icon {
+    transform: rotate(7deg);
+}
+
+/* Individual icon sizes */
+.send-icon {
+    width: 24px;
+}
+
+.upload-icon {
+    width: 32px;
+}
+
+.file-save-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Spacing between the input and button */
+  }
+  
+  #fileNameInput {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  #saveButton {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #1e90ff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  #saveButton:hover {
+    background-color: #0077cc;
+    transform: scale(1.05);
+  }
+  
+/* Chat history container styles */
+#chatHistoryList {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 5px;
+  }
+  
+  /* Individual chat item styles */
+  .chat-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Hover effects to indicate clickability */
+  .chat-item:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+
+  .chat-item.selected {
+    background-color: black; /* Light background color to indicate selection */
+    color: #fff; /* Change text color to blue for the selected item */
+}
+
+
+  
